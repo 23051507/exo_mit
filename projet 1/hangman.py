@@ -12,7 +12,7 @@
 import random
 import string
 
-WORDLIST_FILENAME = "words.txt"
+WORDLIST_FILENAME = "C:\\Users\\Michel\\OneDrive\\Bureau\\MIT1\\exo_mit\\projet 1\\words.txt"
 
 
 def load_words():
@@ -52,14 +52,6 @@ wordlist = load_words()
 
 
 def is_word_guessed(secret_word, letters_guessed):
-    '''
-    secret_word: string, the word the user is guessing; assumes all letters are
-      lowercase
-    letters_guessed: list (of letters), which letters have been guessed so far;
-      assumes that all letters are lowercase
-    returns: boolean, True if all the letters of secret_word are in letters_guessed;
-      False otherwise
-    '''
     s=True
     i=0
     secret_word1 =list(secret_word)
@@ -75,12 +67,6 @@ def is_word_guessed(secret_word, letters_guessed):
 
 
 def get_guessed_word(secret_word, letters_guessed):
-    '''
-    secret_word: string, the word the user is guessing
-    letters_guessed: list (of letters), which letters have been guessed so far
-    returns: string, comprised of letters, underscores (_), and spaces that represents
-      which letters in secret_word have been guessed so far.
-    '''
     secret_word2 = list(secret_word)
     i=0
     resultat = []
@@ -93,50 +79,52 @@ def get_guessed_word(secret_word, letters_guessed):
     resultat1 =''.join(resultat)
     return resultat1 
     
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+'''   
 secret_word= 'pomme'  
 letters_guessed = ['e', 'i', 'k', 'p', 'r', 's'] 
 print(get_guessed_word(secret_word, letters_guessed))
-
+'''
 def get_available_letters(letters_guessed):
-    '''
-    letters_guessed: list (of letters), which letters have been guessed so far
-    returns: string (of letters), comprised of letters that represents which letters have not
-      yet been guessed.
-    '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+  string1=[string.ascii_lowercase]
+  for i in range(len(letters_guessed)):
+    if letters_guessed[i] in string1:
+      string3=string1.replace(string1[i],"") 
+      string2=''.join(string3)    
+  return string2
     
     
-
 def hangman(secret_word):
-    '''
-    secret_word: string, the secret word to guess.
+    guesses_left = 6
+    letters_guessed = []
     
-    Starts up an interactive game of Hangman.
+    print("Bienvenue dans le jeu du Pendu !")
+    print("Je pense à un mot qui contient", len(secret_word), "lettres.")
     
-    * At the start of the game, let the user know how many 
-      letters the secret_word contains and how many guesses s/he starts with.
-      
-    * The user should start with 6 guesses
-
-    * Before each round, you should display to the user how many guesses
-      s/he has left and the letters that the user has not yet guessed.
-    
-    * Ask the user to supply one guess per round. Remember to make
-      sure that the user puts in a letter!
-    
-    * The user should receive feedback immediately after each guess 
-      about whether their guess appears in the computer's word.
-
-    * After each guess, you should display to the user the 
-      partially guessed word so far.
-    
-    Follows the other limitations detailed in the problem write-up.
-    '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+    while True:
+        print("-------------")
+        print("Il te reste", guesses_left, "essais.")
+        available_letters = get_available_letters(letters_guessed)
+        print("Lettres disponibles :", available_letters)
+        
+        guess = input("Devine une lettre :").lower()
+        
+        if guess in secret_word:
+            letters_guessed.append(guess)
+            print("Bonne devinette !")
+        else:
+            guesses_left -= 1
+            print("Mauvaise devinette...")
+        
+        word_guessed = get_guessed_word(secret_word, letters_guessed)
+        print("Mot deviné :", word_guessed)
+        
+        if is_word_guessed(secret_word, letters_guessed):
+            print("Félicitations, tu as deviné le mot !")
+            break
+        
+        if guesses_left == 0:
+            print("Désolé, tu as épuisé tous tes essais. Le mot était", secret_word)
+            break
 
 
 
@@ -151,63 +139,66 @@ def hangman(secret_word):
 
 
 def match_with_gaps(my_word, other_word):
-    '''
-    my_word: string with _ characters, current guess of secret word
-    other_word: string, regular English word
-    returns: boolean, True if all the actual letters of my_word match the 
-        corresponding letters of other_word, or the letter is the special symbol
-        _ , and my_word and other_word are of the same length;
-        False otherwise: 
-    '''
+    
     # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+    my_word = my_word.replace(" ", "")
+  
+    if len(my_word) != len(other_word):
+        return False
+    
+    for i in range(len(my_word)):
+        if my_word[i] != "_" and my_word[i] != other_word[i]:
+            return False
+        if my_word[i] == "_" and other_word[i] in my_word:
+            return False
+    
+    return True
 
 
 
 def show_possible_matches(my_word):
-    '''
-    my_word: string with _ characters, current guess of secret word
-    returns: nothing, but should print out every word in wordlist that matches my_word
-             Keep in mind that in hangman when a letter is guessed, all the positions
-             at which that letter occurs in the secret word are revealed.
-             Therefore, the hidden letter(_ ) cannot be one of the letters in the word
-             that has already been revealed.
+  
+        matches = []
+        for word in wordlist:
+            if match_with_gaps(my_word, word):
+                matches.append(word)
+        if len(matches) == 0:
+            print("Aucun mot possible trouvé.")
+        else:
+            print("Mots possibles:")
+            for match in matches:
+                print(match)
 
-    '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
 
 
 
 def hangman_with_hints(secret_word):
-    '''
-    secret_word: string, the secret word to guess.
     
-    Starts up an interactive game of Hangman.
-    
-    * At the start of the game, let the user know how many 
-      letters the secret_word contains and how many guesses s/he starts with.
-      
-    * The user should start with 6 guesses
-    
-    * Before each round, you should display to the user how many guesses
-      s/he has left and the letters that the user has not yet guessed.
-    
-    * Ask the user to supply one guess per round. Make sure to check that the user guesses a letter
-      
-    * The user should receive feedback immediately after each guess 
-      about whether their guess appears in the computer's word.
-
-    * After each guess, you should display to the user the 
-      partially guessed word so far.
-      
-    * If the guess is the symbol *, print out all words in wordlist that
-      matches the current guessed word. 
-    
-    Follows the other limitations detailed in the problem write-up.
-    '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+    # Initialise le nombre de tentatives restantes
+    guesses_remaining = 6
+    # Liste pour stocker les lettres devinées
+    letters_guessed = []
+    while guesses_remaining > 0:
+        # Affiche le mot avec des lettres non devinées remplacées par des _
+        display_word = get_guessed_word(secret_word, letters_guessed)
+        print("Mot actuel:", display_word)
+        print("Tentatives restantes:", guesses_remaining)
+        letter = input("Devinez une lettre: ")
+        if letter == "*":
+            show_possible_matches(display_word)
+        elif letter in letters_guessed:
+            print("Vous avez déjà deviné cette lettre. Veuillez réessayer.")
+        else:
+            letters_guessed.append(letter)
+            if letter in secret_word:
+                print("Bonne devinette!")
+                if is_word_guessed(secret_word, letters_guessed):
+                    print("Félicitations! Vous avez deviné le mot correctement:", secret_word)
+                    return
+            else:
+                print("Mauvaise devinette!")
+                guesses_remaining -= 1
+    print("Game Over. Vous avez épuisé toutes vos tentatives. Le mot était:", secret_word)
 
 
 
